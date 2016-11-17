@@ -20,39 +20,28 @@ function malta_less(o, options) {
 		compress = options.compress || false,
 		start = new Date(),
 		msg,
-		oldname = o.name;
+        pluginName = path.basename(path.dirname(__filename)),
+		oldname = o.name,
+		doErr = function (e) {
+			console.log(('[ERROR on ' + o.name + ' using ' + pluginName + '] :').red());
+			console.dir(e);
+			self.stop();
+		};
 
 	o.name = o.name.replace(/\.less$/, '.css');
 
 	return function (solve, reject){
-		try {
-			less.render(o.content, {compress : compress}, function(err, newContent) {
-				if (err) {
-					console.log('[ERROR] packer says:');
-					console.dir(err);
-					self.stop();
-				} else {
-
-					o.content = newContent.css;
-					
-					fs.writeFile(o.name, o.content, function(err) {
-						if (err == null) {
-							msg = 'plugin ' + path.basename(path.dirname(__filename)).white() + ' wrote ' + o.name+ ' (' + self.getSize(o.name) + ')';
-						} else {
-							console.log('[ERROR] less says:');
-							console.dir(err);
-							self.stop();
-						}
-						fs.unlink(oldname);
-						solve(o);
-						self.notifyAndUnlock(start, msg);
-					});
-				}
+		less.render(o.content, {compress : compress}, function(err, newContent) {
+			err && doErr(err);
+			o.content = newContent.css;
+			fs.writeFile(o.name, o.content, function(err) {
+				err && doErr(err);
+				msg = 'plugin ' + pluginName.white() + ' wrote ' + o.name+ ' (' + self.getSize(o.name) + ')';
+				fs.unlink(oldname);
+				solve(o);
+				self.notifyAndUnlock(start, msg);
 			});
-		} catch (err) {
-			console.log('[PARSE ERROR: ' + o.name + '] ' + err.message + ' @' + err.line);
-			self.stop();
-		}
+		});
 	};	
 }
 malta_less.ext = 'less';
