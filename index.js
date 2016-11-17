@@ -21,21 +21,16 @@ function malta_less(o, options) {
 		start = new Date(),
 		msg,
         pluginName = path.basename(path.dirname(__filename)),
-		oldname = o.name,
-		doErr = function (e) {
-			console.log(('[ERROR on ' + o.name + ' using ' + pluginName + '] :').red());
-			console.dir(e);
-			self.stop();
-		};
+		oldname = o.name;
 
 	o.name = o.name.replace(/\.less$/, '.css');
 
 	return function (solve, reject){
 		less.render(o.content, {compress : compress}, function(err, newContent) {
-			err && doErr(err);
+			err && self.doErr(err, o, pluginName);
 			o.content = newContent.css;
 			fs.writeFile(o.name, o.content, function(err) {
-				err && doErr(err);
+				err && self.doErr(err, o, pluginName);
 				msg = 'plugin ' + pluginName.white() + ' wrote ' + o.name+ ' (' + self.getSize(o.name) + ')';
 				fs.unlink(oldname);
 				solve(o);
