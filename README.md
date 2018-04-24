@@ -1,3 +1,10 @@
+---
+[![npm version](https://badge.fury.io/js/malta-less.svg)](http://badge.fury.io/js/malta-less)
+[![Dependencies](https://david-dm.org/fedeghe/malta-less.svg)](https://david-dm.org/fedeghe/malta-less)
+[![npm downloads](https://img.shields.io/npm/dt/malta-less.svg)](https://npmjs.org/package/malta-less)
+[![npm downloads](https://img.shields.io/npm/dm/malta-less.svg)](https://npmjs.org/package/malta-less)  
+---  
+
 This plugin can be used on: **.less** files
 
 Options : 
