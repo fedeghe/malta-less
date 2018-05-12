@@ -27,15 +27,19 @@ function malta_less(o, options) {
 
 	return function (solve, reject){
 		less.render(o.content, {compress : compress}, function(err, newContent) {
-			err && self.doErr(err, o, pluginName);
-			o.content = newContent.css;
-			fs.writeFile(o.name, o.content, function(err) {
-				err && self.doErr(err, o, pluginName);
-				msg = 'plugin ' + pluginName.white() + ' wrote ' + o.name+ ' (' + self.getSize(o.name) + ')';
-				fs.unlink(oldname);
+			if (err) {
+				self.doErr(err, o, pluginName);
 				solve(o);
-				self.notifyAndUnlock(start, msg);
-			});
+			} else {
+				o.content = newContent.css;
+				fs.writeFile(o.name, o.content, function(err) {
+					err && self.doErr(err, o, pluginName);
+					msg = 'plugin ' + pluginName.white() + ' wrote ' + o.name+ ' (' + self.getSize(o.name) + ')';
+					fs.unlink(oldname);
+					solve(o);
+					self.notifyAndUnlock(start, msg);
+				});
+			}
 		});
 	};	
 }
