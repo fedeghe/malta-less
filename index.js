@@ -29,7 +29,9 @@ function malta_less(o, options) {
 		less.render(o.content, {compress : compress}, function(err, newContent) {
 			if (err) {
 				self.doErr(err, o, pluginName);
+				msg = 'plugin ' + pluginName.white() + ' ERROR on file ' + o.name + ')';
 				solve(o);
+				self.notifyAndUnlock(start, msg);
 			} else {
 				o.content = newContent.css;
 				fs.writeFile(o.name, o.content, function(err) {
