@@ -21,8 +21,8 @@
     "url": "https://github.com/fedeghe/malta-less/issues"
   },
   "dependencies": {
-    "less": ">=3.0.2",
-    "malta": ">=3.8.7"
+    "less": "^3.8.1",
+    "malta": ">=3.8.14"
   },
   "main": "./index.js"
 }
