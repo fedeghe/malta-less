@@ -30,7 +30,9 @@ function malta_less(o, options) {
 			if (err) {
 				self.doErr(err, o, pluginName);
 				msg = 'plugin ' + pluginName.white() + ' ERROR on file ' + o.name + ')';
-				solve(o);
+				err
+                    ? reject(`Plugin ${pluginName} error:\n${err}`)
+                    : solve(o);
 				self.notifyAndUnlock(start, msg);
 			} else {
 				o.content = newContent.css;
@@ -38,7 +40,9 @@ function malta_less(o, options) {
 					err && self.doErr(err, o, pluginName);
 					msg = 'plugin ' + pluginName.white() + ' wrote ' + o.name+ ' (' + self.getSize(o.name) + ')';
 					fs.unlink(oldname, () => {});
-					solve(o);
+					err
+                        ? reject(`Plugin ${pluginName} write error:\n${err}`)
+                        : solve(o);
 					self.notifyAndUnlock(start, msg);
 				});
 			}
