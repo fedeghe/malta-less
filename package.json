@@ -22,7 +22,7 @@
     },
     "dependencies": {
         "less": "^3.8.1",
-        "malta": ">=3.9.11"
+        "malta": "^4.0.4"
     },
     "main": "./index.js"
 }
