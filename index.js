@@ -1,4 +1,3 @@
-require('malta').checkDeps('less');
 /**
  * malta-less plugin
  * dependency : less
@@ -10,23 +9,24 @@ require('malta').checkDeps('less');
  * 
  * pipe support : yes
  */
-var less = require("less"),
+const less = require("less"),
 	path = require('path'),
 	fs = require('fs');
 
 function malta_less(o, options) {
 
-	var self = this,
+	const self = this,
 		compress = options.compress || false,
 		start = new Date(),
-		msg,
         pluginName = path.basename(path.dirname(__filename)),
-		oldname = o.name;
+        oldname = o.name;
+    
+    let msg;
 
 	o.name = o.name.replace(/\.less$/, '.css');
 
-	return function (solve, reject){
-		less.render(o.content, {compress : compress}, function(err, newContent) {
+	return (solve, reject) => {
+		less.render(o.content, {compress : compress}, (err, newContent) => {
 			if (err) {
 				self.doErr(err, o, pluginName);
 				msg = 'plugin ' + pluginName.white() + ' ERROR on file ' + o.name + ')';
@@ -36,7 +36,7 @@ function malta_less(o, options) {
 				self.notifyAndUnlock(start, msg);
 			} else {
 				o.content = newContent.css;
-				fs.writeFile(o.name, o.content, function(err) {
+				fs.writeFile(o.name, o.content, err => {
 					err && self.doErr(err, o, pluginName);
 					msg = 'plugin ' + pluginName.white() + ' wrote ' + o.name+ ' (' + self.getSize(o.name) + ')';
 					fs.unlink(oldname, () => {});
